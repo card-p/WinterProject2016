@@ -1,4 +1,4 @@
 # coding: UTF-8
 
-print 'test'
+print 'test test'
 

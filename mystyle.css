@@ -1,8 +1,16 @@
 * {
-  background: blue;
+  font-family: "メイリオ", sans-serif;
 }
 
 body {
-    font-size: 20px;
-    text-align: center;
+  font-size: 20px;
+  text-align: center;
+}
+
+#game {
+  border: solid 1px;
+  border-color: black;
+  width: 640px;
+  height: 480px;
+  margin: 0 auto;
 }

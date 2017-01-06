@@ -1,18 +1,19 @@
 
 window.addEventListener("load", init);
 
-function init () {
-    var stage = new createjs.Stage("myCanvas");
+var width = 640;
+var height = 480;
+var r = 20;
 
+function init () {
+
+    var stage = new createjs.Stage("myCanvas");
     var enemy = new createjs.Shape();
     var partition = new createjs.Shape();
     //var g = new createjs.Graphics();
-    var width = 640;
-    var height = 480;
-    var r = 20;
     var moveMax = 40;
     var speed = 4;
-    var allPartition = [];
+    var allYPartition = [];
 
     // 白い丸(user)
 
@@ -28,25 +29,35 @@ function init () {
     partition.graphics.lineTo(width, 80);
     stage.addChild(partition);
 
-    allMakePartition(allPartition);
+    // 縦横マス目の線
+    for(var i = 0; i < 16; i++){
+        var lineX = new createjs.Shape();
+        lineX.graphics.beginStroke("black");
+        lineX.graphics.moveTo(2*r*(i+1)-r, 80);
+        lineX.graphics.lineTo(2*r*(i+1)-r, height);
+        stage.addChild(lineX);
+    }
+    for(var j = 0; j < 10; j++){
+        var lineY = new createjs.Shape();
+        lineY.graphics.beginStroke("black");
+        lineY.graphics.moveTo(20, 80+2*r*(j+1));
+        lineY.graphics.lineTo(width-20, 80+2*r*(j+1));
+        stage.addChild(lineY);
+
+        allYPartition[j] = lineY;
+    //  allMakePartition(stage, j);
+    }
 
     createjs.Ticker.addEventListener("tick", handleTick);
           function handleTick() {
-            //  shape.x += 10;
-            //  shape.y += 10;
               stage.update();
           }
 }
 
-function allMakePartition(){
-    for(int i = 0; i < 16; i++){
-
-    }
-    for(int j = 0; j < 11; j++){
-        var line = new createjs.Shape();
-        line.graphics.beginStroke("black");
-        line.graphics.moveTo(0, 80);
-        line.graphics.lineTo(width, 80);
-        stage.addChild(line);
-    }
-}
+/*function allMakePartition(st, num){
+    var line = new createjs.Shape();
+    line.graphics.beginStroke("black");
+    line.graphics.moveTo(20, 80+2*r*(num+1));
+    line.graphics.lineTo(width-20, 80+2*r*(num+1));
+    st.addChild(line);
+}*/

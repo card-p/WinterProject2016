@@ -13,9 +13,28 @@ var User = function(posx, posy, stage) {
     this.enemy.graphics.drawCircle(posx, posy, 20);
     stage.addChild(this.enemy);
 
-    this.moveRight = function(stage) {
-        this.enemy.x += 1;
-        stage.addChild(this.enemy);
+    this.move = function(keyCode, stage) {
+        for(var i=0; i<40; i++) {
+            // window.setTimeout( function() {
+                if (keyCode == 37 && this.enemy.x >0) {
+                    this.enemy.x -= 1;
+                    stage.addChild(this.enemy);
+                }
+                if (keyCode == 38 && this.enemy.y > 100) {
+                    console.log(keyCode);
+                    this.enemy.y -= 1;
+                    stage.addChild(this.enemy);
+                }
+                if (keyCode == 39 && this.enemy.x <560) {
+                    this.enemy.x += 1;
+                    stage.addChild(this.enemy);
+                }
+                if (keyCode == 40 && this.enemy.y < 460) {
+                    this.enemy.y += 1;
+                    stage.addChild(this.enemy);
+                }
+            // }, 5 );
+        }
     }
 }
 //敵クラス
@@ -48,12 +67,16 @@ function init () {
     partition.graphics.lineTo(width, 80);
     stage.addChild(partition);
 
+    window.addEventListener("keydown", handleKeydown);
+    function handleKeydown (event) {
+        var keyCode = event.keyCode;
+        user.move(keyCode, stage);
+    }
+
     createjs.Ticker.addEventListener("tick", handleTick);
-        function handleTick() {
-            user.moveRight(stage);
-            stage.update();
-        }
-}
+    function handleTick() {
+        stage.update();
+    }
 
     // 縦横マス目の線
     for(var i = 0; i < 16; i++){
@@ -73,9 +96,8 @@ function init () {
         allYPartition[j] = lineY;
     }
 
-    createjs.Ticker.addEventListener("tick", handleTick);
-          function handleTick() {
-              stage.update();
-          }
+    // createjs.Ticker.addEventListener("tick", handleTick);
+    //       function handleTick() {
+    //           stage.update();
+    //       }
 }
-

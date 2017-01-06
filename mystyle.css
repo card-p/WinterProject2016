@@ -1,5 +1,12 @@
+/*
+クリーム色：#d0b98d
+赤：#a03c44
+
+*/
+
 * {
   font-family: "メイリオ", sans-serif;
+  background: #d0b98d;
 }
 
 body {
@@ -7,10 +14,21 @@ body {
   text-align: center;
 }
 
-#game {
+.title {
+  color: #a03c44;
+}
+#highScore {
+  float: left;
+  margin-left: 10px;
+  width: 10%;
+  position: absolute;
+}
+
+#myCanvas {
   border: solid 1px;
   border-color: black;
   width: 640px;
   height: 480px;
   margin: 0 auto;
+  background: white;
 }

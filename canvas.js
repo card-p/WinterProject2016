@@ -4,6 +4,7 @@ window.addEventListener("load", init);
 var width = 640;
 var height = 480;
 var r = 20;
+
 //ユーザークラス
 var User = function(posx, posy, stage) {
     this.enemy = new createjs.Shape();
@@ -27,13 +28,14 @@ var Enemy = function(posx, posy, stage) {
 }
 
 function init () {
-    var stage = new createjs.Stage("myCanvas");
 
+    var stage = new createjs.Stage("myCanvas");
+    var enemy = new createjs.Shape();
     var partition = new createjs.Shape();
     //var g = new createjs.Graphics();
     var moveMax = 40;
     var speed = 4;
-    var allPartition = [];
+    var allYPartition = [];
 
     // 白い丸(user)
     var user = new User(40, 460, stage);
@@ -46,25 +48,34 @@ function init () {
     partition.graphics.lineTo(width, 80);
     stage.addChild(partition);
 
-//    allMakePartition(allPartition);
-
     createjs.Ticker.addEventListener("tick", handleTick);
         function handleTick() {
-            //  shape.x += 10;
-            //  shape.y += 10;
             user.moveRight(stage);
             stage.update();
         }
 }
 
-// function allMakePartition(){
-//     for(int i = 0; i < 16; i++){
-//
-//     }
-//     for(int j = 0; j < 11; j++){
-//         var line = new createjs.Shape();
-//         line.graphics.beginStroke("black");
-//         line.graphics.moveTo(0, 80);
-//         line.graphics.lineTo(width, 80);
-//         stage.addChild(line);
-//     }
+    // 縦横マス目の線
+    for(var i = 0; i < 16; i++){
+        var lineX = new createjs.Shape();
+        lineX.graphics.beginStroke("black");
+        lineX.graphics.moveTo(2*r*(i+1)-r, 80);
+        lineX.graphics.lineTo(2*r*(i+1)-r, height);
+        stage.addChild(lineX);
+    }
+    for(var j = 0; j < 10; j++){
+        var lineY = new createjs.Shape();
+        lineY.graphics.beginStroke("black");
+        lineY.graphics.moveTo(20, 80+2*r*(j+1));
+        lineY.graphics.lineTo(width-20, 80+2*r*(j+1));
+        stage.addChild(lineY);
+
+        allYPartition[j] = lineY;
+    }
+
+    createjs.Ticker.addEventListener("tick", handleTick);
+          function handleTick() {
+              stage.update();
+          }
+}
+

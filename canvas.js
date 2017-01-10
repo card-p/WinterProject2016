@@ -1,44 +1,61 @@
-
 window.addEventListener("load", init);
 
 var width = 640;
 var height = 480;
 var r = 20;
+var actionFlag = true;
+var gameOverFlag = false;
 
 //ユーザークラス
 var User = function(posx, posy, stage) {
+    this.posx = posx;
+    this.posy = posy;
+
     this.enemy = new createjs.Shape();
     this.enemy.graphics.beginFill("#ffffff");
     this.enemy.graphics.beginStroke("black");
     this.enemy.graphics.drawCircle(posx, posy, 20);
     stage.addChild(this.enemy);
 
+    // ユーザー移動メソッド
     this.move = function(keyCode, stage) {
         for(var i=0; i<40; i++) {
             // window.setTimeout( function() {
-                if (keyCode == 37 && this.enemy.x >0) {
+                if (keyCode == 37 && this.enemy.x > 0) {
                     this.enemy.x -= 1;
+                    this.posx -= 1;
                     stage.addChild(this.enemy);
                 }
-                if (keyCode == 38 && this.enemy.y > 100) {
-                    console.log(keyCode);
+                if (keyCode == 38 && this.enemy.y > -360) {
                     this.enemy.y -= 1;
+                    this.posy -= 1;
                     stage.addChild(this.enemy);
                 }
                 if (keyCode == 39 && this.enemy.x <560) {
                     this.enemy.x += 1;
+                    this.posx += 1;
                     stage.addChild(this.enemy);
                 }
-                if (keyCode == 40 && this.enemy.y < 460) {
+                if (keyCode == 40 && this.enemy.y < 0) {
                     this.enemy.y += 1;
+                    this.posy += 1;
                     stage.addChild(this.enemy);
                 }
-            // }, 5 );
         }
+    }
+    this.init = function(stage) {
+        this.posx = 40;
+        this.posy = 460;
+        this.enemy.x = 0;
+        this.enemy.y = 0;
+
     }
 }
 //敵クラス
 var Enemy = function(posx, posy, stage) {
+    this.posx = posx;
+    this.posy = posy;
+
     this.enemy = new createjs.Shape();
     this.enemy.graphics.beginFill("#a03c44");
     this.enemy.graphics.beginStroke("black");
@@ -46,11 +63,30 @@ var Enemy = function(posx, posy, stage) {
     stage.addChild(this.enemy);
 }
 
+// ゲームオーバークラス
+var GameOver = function(stage) {
+    var gameOverText = new createjs.Text("Game Over!", "24px serif", "DarkRed");
+    var spaceText = new createjs.Text("Space: Restart", "24px serif", "Black");
+    spaceText.y += 30;
+    stage.addChild(gameOverText);
+    stage.addChild(spaceText);
+
+    this.action = function(keyCode, stage, user) {
+        if (keyCode == 32) {
+            user.init(stage);
+            stage.removeChild(gameOverText);
+            stage.removeChild(spaceText);
+            actionFlag = true;
+            gameOverFlag = false;
+        }
+    }
+}
+
 function init () {
 
     var stage = new createjs.Stage("myCanvas");
-    var enemy = new createjs.Shape();
     var partition = new createjs.Shape();
+    var gameOver;
     //var g = new createjs.Graphics();
     var moveMax = 40;
     var speed = 4;
@@ -70,11 +106,22 @@ function init () {
     window.addEventListener("keydown", handleKeydown);
     function handleKeydown (event) {
         var keyCode = event.keyCode;
-        user.move(keyCode, stage);
+        if(actionFlag) {
+            user.move(keyCode, stage);
+        }
+        if(gameOverFlag) {
+            gameOver.action(keyCode, stage, user);
+        }
     }
 
     createjs.Ticker.addEventListener("tick", handleTick);
     function handleTick() {
+        if ((user.posx == enemy1.posx) && (user.posy == enemy1.posy)) {
+            actionFlag = false;
+            gameOverFlag = true;
+            gameOver = new GameOver(stage);
+            user.posx += 1;
+        }
         stage.update();
     }
 

@@ -70,9 +70,9 @@ var Rock = function(posx, posy, stage) {
     this.posy = posy;
 
     this.rock = new createjs.Shape();
-    this.rock.graphics.beginFill("#7d0f80");
+    this.rock.graphics.beginFill("#c1541c");
     this.rock.graphics.beginStroke("black");
-    this.rock.graphics.rect(posx, posy, 40, 40);
+    this.rock.graphics.drawRoundRect(posx, posy, 40, 40, 10);
     stage.addChild(this.rock);
 
     this.judgement = function(human, info) {
@@ -88,9 +88,6 @@ var Rock = function(posx, posy, stage) {
         if ((human.posx == this.posx + 20) && (human.posy == this.posy - 20)) {
             info[3] = false;
         }
-    }
-
-    this.replace = function(rockx, rocky) {
     }
 
     this.init = function(stage) {

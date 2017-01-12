@@ -6,40 +6,41 @@ var rockNum = 50;
 var r = 20;
 var actionFlag = true;
 var gameOverFlag = false;
+var turn = 0;
+var score = 0;
 
 //ユーザークラス
 var User = function(posx, posy, stage) {
     this.posx = posx;
     this.posy = posy;
 
-    this.enemy = new createjs.Shape();
-    this.enemy.graphics.beginFill("#ffffff");
-    this.enemy.graphics.beginStroke("black");
-    this.enemy.graphics.drawCircle(posx, posy, 20);
-    stage.addChild(this.enemy);
+    this.user = new createjs.Shape();
+    this.user.graphics.beginFill("#ffffff");
+    this.user.graphics.beginStroke("black");
+    this.user.graphics.drawCircle(posx, posy, 20);
+    stage.addChild(this.user);
 
     // ユーザー移動メソッド
     this.move = function(keyCode, stage, rocks) {
         var info = [true, true, true, true];
         for(var i=0; i<40; i++) {
-            // window.setTimeout( function() {
             for(var j=0; j<rockNum; j++) {
                 rocks[j].judgement(this, info);
             }
-            if (keyCode == 37 && this.enemy.x > 0 && info[0] == true) {
-                this.enemy.x -= 1;
+            if (keyCode == 37 && this.user.x > 0 && info[0] == true) { // 左
+                this.user.x -= 1;
                 this.posx -= 1;
             }
-            if (keyCode == 38 && this.enemy.y > -360 && info[1] == true) {
-                this.enemy.y -= 1;
+            if (keyCode == 38 && this.user.y > -360 && info[1] == true) { // 上
+                this.user.y -= 1;
                 this.posy -= 1;
             }
-            if (keyCode == 39 && this.enemy.x <560 && info[2] == true) {
-                this.enemy.x += 1;
+            if (keyCode == 39 && this.user.x < 560 && info[2] == true) { // 右
+                this.user.x += 1;
                 this.posx += 1;
             }
-            if (keyCode == 40 && this.enemy.y < 0 && info[3] == true) {
-                this.enemy.y += 1;
+            if (keyCode == 40 && this.user.y < 0 && info[3] == true) { // 下
+                this.user.y += 1;
                 this.posy += 1;
             }
         }
@@ -47,8 +48,8 @@ var User = function(posx, posy, stage) {
     this.init = function(stage) {
         this.posx = 40;
         this.posy = 460;
-        this.enemy.x = 0;
-        this.enemy.y = 0;
+        this.user.x = 0;
+        this.user.y = 0;
 
     }
 }
@@ -62,6 +63,33 @@ var Enemy = function(posx, posy, stage) {
     this.enemy.graphics.beginStroke("black");
     this.enemy.graphics.drawCircle(posx, posy, 20);
     stage.addChild(this.enemy);
+
+    this.structure1 = function (user_posx, user_posy){
+        var probability = Math.floor(Math.random() * 11);
+
+    }
+
+    this.move = function() {
+        if(this.posx > 40){
+            this.posx -= 40;
+            this.enemy.x -= 40;
+        }
+        if(this.posy < 460){
+            this.posy += 40;
+            this.enemy.y += 40;
+        }
+        if(this.posx < 600){
+            this.posx += 40;
+            this.enemy.x += 40;
+
+        }
+        if(this.posy > 100){
+            this.posy -= 40;
+            this.enemy.y -= 40;
+        }
+
+    }
+
 }
 
 // 障害物クラス
@@ -144,6 +172,7 @@ function init () {
 
     // 白い丸(user)
     var user = new User(40, 460, stage);
+
     // 赤い丸(敵)
     var enemy1 =new Enemy(40, 100, stage);
     var rocks = [];
@@ -168,6 +197,14 @@ function init () {
         var keyCode = event.keyCode;
         if(actionFlag) {
             user.move(keyCode, stage, rocks);
+            enemy1.structure1(user.posx, user.posy);
+            actionFlag = false;
+            setTimeout(function(){
+                enemy1.move();
+                turn += 1;
+                actionFlag = true;
+
+            }, 1000);
         }
         if(gameOverFlag) {
             gameOver.action(keyCode, stage, user,rocks);
